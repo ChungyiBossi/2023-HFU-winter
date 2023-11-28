@@ -1,4 +1,4 @@
-# import numpy as np
+import numpy as np
 import time
 
 # sort.py 是一個 module
@@ -106,10 +106,12 @@ def insertion_sort(numbers):
     return result
 
 
+# 當這個.py檔被直接執行的時候，這個 if 才會通過
+# 如果這個.py是被當作module引入的話，底下的程式碼不會執行
 if __name__ == '__main__':
-    # numbers = list(np.random.randint(1, 10000, size=50))
-    numbers = [4, 5, 6, 7, 8, 9, 9, 3, 5, 87, 95, 67]
+    numbers = list(np.random.randint(1, 10000, size=10))
     answer = sorted(numbers)
+    print("Random a int list, range from 1~10000, size:10")
 
     current_time = time.time_ns()
     sort_result = bubble_sort(numbers.copy())
