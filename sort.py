@@ -141,4 +141,10 @@ if __name__ == '__main__':
     sort_result = quick_sort(numbers.copy())
     assert answer == sort_result
     finish_time = time.time_ns()
+    print("Quick Sort Result x:", sort_result, finish_time-current_time)
+
+    current_time = time.perf_counter_ns()
+    sort_result = quick_sort(numbers.copy())
+    assert answer == sort_result
+    finish_time = time.perf_counter_ns()
     print("Quick Sort Result:", sort_result, finish_time-current_time)

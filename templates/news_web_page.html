@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新聞網 {{ integer }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        article {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+
+        time {
+            color: #999;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1em;
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>新聞網</h1>
+    </header>
+
+    <main>
+        <!-- 利用jinja2模板，讓python語法得以使用。 -->
+        {% for info in news_info %}
+        <!-- 把原本python生成字串的方法搬過來，不需要強調是字串 -->
+        <article>
+            <h3><a href={{ info['href'] }}> {{ info['news_title'] }} </a></h3>
+            <br />
+            <media>{{info['media']}}</media>
+        </article>
+        {% endfor %}
+
+    </main>
+    <footer>
+        &copy; 2023 新聞網. All rights reserved.
+    </footer>
+</body>
+
+</html>
