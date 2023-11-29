@@ -3,7 +3,7 @@ import requests
 from pprint import pprint
 
 
-def find_news(soup, is_show_sample=False):
+def find_news(soup, base_href, is_show_sample=False):
     # 期望的資料格式
     list_of_news_info = list()
 
@@ -35,7 +35,7 @@ def find_news(soup, is_show_sample=False):
             # print()
     if is_show_sample:
         print('Total news number:', len(list_of_news_info))
-        pprint(list_of_news_info[0])
+        pprint(list_of_news_info)
 
     return list_of_news_info
 
@@ -52,4 +52,4 @@ if __name__ == '__main__':
     # 把 HTML 轉化成 “湯”
     soup = BeautifulSoup(r.content, 'html.parser')
     # 看一下DOM樹
-    result = find_news(soup, is_show_sample=True)
+    result = find_news(soup, base_href=base_href, is_show_sample=True)
