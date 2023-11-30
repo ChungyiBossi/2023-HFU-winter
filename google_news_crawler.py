@@ -40,7 +40,21 @@ def find_news(soup, base_href, is_show_sample=False):
     return list_of_news_info
 
 
+def request_and_parse_web_page(url):
+    # 取得網頁回覆
+    r = requests.get(url)
+    # 確定 r 是什麼東西？ 是 html 才走下一步
+    small_soup = BeautifulSoup(r.content[:200], 'html.parser')
+    base_href = small_soup.base['href']
+    # 把 HTML 轉化成 “湯”
+    soup = BeautifulSoup(r.content, 'html.parser')
+    # 看一下DOM樹
+    result = find_news(soup, base_href=base_href)
+    return result
+
+
 def generate_web_page(list_of_news_info):
+    # 儘量用網頁模版實現, e.g. jinja2
     news_articles = ""
     for news_info in list_of_news_info:
         news_title = news_info['news_title']
@@ -132,19 +146,9 @@ def generate_web_page(list_of_news_info):
 
 
 if __name__ == '__main__':
-    # 取得網頁回覆
+
     url = 'https://news.google.com/topics/CAAqJQgKIh9DQkFTRVFvSUwyMHZNR3QwTlRFU0JYcG9MVlJYS0FBUAE?hl=zh-TW&gl=TW&ceid=TW%3Azh-Hant'
-    r = requests.get(url)
-
-    # 確定 r 是什麼東西？ 是 html 才走下一步
-    small_soup = BeautifulSoup(r.content[:200], 'html.parser')
-    base_href = small_soup.base['href']
-
-    # 把 HTML 轉化成 “湯”
-    soup = BeautifulSoup(r.content, 'html.parser')
-    # 看一下DOM樹
-    result = find_news(soup, base_href=base_href, is_show_sample=True)
-
+    result = request_and_parse_web_page(url)
     # 生成 news html
     generated_html = generate_web_page(result)
 
