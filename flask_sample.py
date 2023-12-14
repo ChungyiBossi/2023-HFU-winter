@@ -1,6 +1,6 @@
 import random
 from flask import Flask, render_template
-from google_news_crawler import request_and_parse_web_page
+from web_crawler.google_news_crawler import request_and_parse_web_page
 
 
 app = Flask(__name__)

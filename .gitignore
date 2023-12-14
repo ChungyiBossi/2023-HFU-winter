@@ -1,0 +1,8 @@
+*.jpg
+*.md
+*.h5
+*.tflite
+.DS_Store
+2023_hfu_winter_env/
+2023_hfu_winter.code-workspace
+computer_vision/models/*
