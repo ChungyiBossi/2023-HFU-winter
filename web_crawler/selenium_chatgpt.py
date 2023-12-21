@@ -20,7 +20,7 @@ class ChatGPTParser:
     def get_driver(driver_path: str = None,):
         chrome_options = uc.ChromeOptions()
         # chrome_options.set_capability("detach", True)
-        return uc.Chrome(options=chrome_options, enable_cdp_events=True) if driver_path is None else uc.Chrome(driver_path, options=options)
+        return uc.Chrome(options=chrome_options, enable_cdp_events=True) if driver_path is None else uc.Chrome(driver_path, options=chrome_options)
 
     def __call__(self, msg: str):
         # Find the input field and send a question
