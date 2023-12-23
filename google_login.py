@@ -29,10 +29,10 @@ def start_chrome_with_semi_auto_login(email, password):
     driver.get(url)
 
     driver.find_element(By.ID, "identifierId").send_keys(email)
-    time.sleep(5)
+    time.sleep(3)
     driver.find_element(
         By.XPATH, '//button[@class="VfPpkd-LgbsSe VfPpkd-LgbsSe-OWXEXe-k8QpJ VfPpkd-LgbsSe-OWXEXe-dgl2Hf nCP5yc AjY5Oe DuMIQc LQeN7 qIypjc TrZEUc lw1w4b"]').click()
-    time.sleep(5)
+    time.sleep(3)
     driver.find_element(
         By.XPATH, '//input[@name="Passwd"]').send_keys(password)
     driver.find_element(
