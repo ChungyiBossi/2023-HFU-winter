@@ -11,6 +11,19 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 
+def save_data(posts_data, pages_csv):
+    result = {
+        'Author': [post['Author'] for post in posts_data],
+        'Thread_Title': [post['Thread_Title'] for post in posts_data],
+        'Content': [post['Content'] for post in posts_data],
+        'Thread_URL': [post['Thread_URL'] for post in posts_data]
+    }
+
+    df_posts = pd.DataFrame(result)
+    df_posts.to_csv(pages_csv, index=False, quoting=csv.QUOTE_NONNUMERIC)
+    print(f"Saved data to {pages_csv}")
+
+
 def crawl_thread(thread_url, driver):
     driver.get(thread_url)
     WebDriverWait(driver, 8).until(
@@ -39,7 +52,7 @@ def crawl_thread(thread_url, driver):
     return result
 
 
-def crawl_personlitycafe_forum(base_url, author_limit, output_path="istp_posts_data.csv"):
+def crawl_personlitycafe_forum(base_url, author_limit, output_folder='data_personality', forum_name="istp_posts_data.csv"):
     options = webdriver.ChromeOptions()
     options.page_load_strategy = 'eager'
     driver = webdriver.Chrome(
@@ -125,19 +138,17 @@ def crawl_personlitycafe_forum(base_url, author_limit, output_path="istp_posts_d
 
         print(f'{"=" * 10} Page {page} end {"=" * 10}')
 
-    # 每次迴圈結束都將資料保存到 CSV 檔案
-    result = {
-        'Author': [post['Author'] for post in posts_data],
-        'Thread_Title': [post['Thread_Title'] for post in posts_data],
-        'Content': [post['Content'] for post in posts_data],
-        'Thread_URL': [post['Thread_URL'] for post in posts_data]
-    }
+        if page % 5:
+            pages_csv = f"{output_folder}/{forum_name}_{page-4}-{page}.csv"
+            save_data(posts_data=posts_data, pages_csv=pages_csv)
+            print(f"Saved data to {forum_name}")
+            posts_data = list()
 
-    df_posts = pd.DataFrame(result)
-    df_posts.to_csv(output_path, index=False, quoting=csv.QUOTE_NONNUMERIC)
-    print(f"Saved data to {output_path}")
+        pages_csv = f"{output_folder}/{forum_name}_{page-5*(page//5)}-{page}.csv"
+        save_data(posts_data=posts_data, pages_csv=forum_name)
+        print(f"Saved data to {forum_name}")
+
     driver.quit()
-
     # 檢查爬取到的作者數量是否足夠
     if len(authors_set) < author_limit:
         print(
@@ -171,13 +182,13 @@ base_forum_urls = [
 author_limit = 500 * len(base_forum_urls)
 for base_forum_url in base_forum_urls:
     # 設定輸出檔案的路徑
-    output_csv_path = f"data_personality/{base_forum_url.split('/')[-2]}.csv"
+    forum_name = base_forum_url.split('/')[-2]
 
     print('Forum url: ', base_forum_url)
-    print('Output csv: ', output_csv_path)
+    print('Forum name: ', forum_name)
     # 爬取資料
     all_posts_data = crawl_personlitycafe_forum(
-        base_forum_url, author_limit, output_path=output_csv_path)
+        base_forum_url, author_limit, forum_name=forum_name)
 
     # 將所有的資料轉換成 DataFrame
     df_all_posts = pd.DataFrame(all_posts_data)
