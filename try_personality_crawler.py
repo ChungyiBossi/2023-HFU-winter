@@ -110,11 +110,10 @@ def crawl_personlitycafe_forum(base_url, author_limit, output_folder='data_perso
                 # get thread content
                 post_content = crawl_thread(thread_url, driver)
                 # 檢查是否已經爬取過該作者的貼文
-                if post_content['Author'] not in authors_set:
-                    authors_set.add(post_content['Author'])
-
-                    # 處理該作者的貼文內容
-                    posts_data.append(post_content)
+                # if post_content['Author'] not in authors_set:
+                authors_set.add(post_content['Author'])
+                # 處理該作者的貼文內容
+                posts_data.append(post_content)
 
                 # 如果已經達到指定作者數目，則退出迴圈
                 if len(authors_set) >= author_limit:
