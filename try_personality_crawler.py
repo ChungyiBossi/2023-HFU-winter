@@ -137,15 +137,13 @@ def crawl_personlitycafe_forum(base_url, author_limit, output_folder='data_perso
 
         print(f'{"=" * 10} Page {page} end {"=" * 10}')
 
-        if page % 5:
+        if page % 5 == 0:
             pages_csv = f"{output_folder}/{forum_name}_{page-4}-{page}.csv"
             save_data(posts_data=posts_data, pages_csv=pages_csv)
-            print(f"Saved data to {forum_name}")
             posts_data = list()
 
-        pages_csv = f"{output_folder}/{forum_name}_{page-5*(page//5)}-{page}.csv"
-        save_data(posts_data=posts_data, pages_csv=forum_name)
-        print(f"Saved data to {forum_name}")
+    pages_csv = f"{output_folder}/{forum_name}_{page-5*(page//5)}-{page}.csv"
+    save_data(posts_data=posts_data, pages_csv=pages_csv)
 
     driver.quit()
     # 檢查爬取到的作者數量是否足夠
