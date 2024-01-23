@@ -28,10 +28,11 @@ def save_thread_data(posts_data, pages_csv):
 
 def crawl_thread(thread_url, driver):
     driver.get(thread_url)
-    WebDriverWait(driver, 8).until(
-        EC.presence_of_element_located(
-            (By.XPATH, '//div[@class="MessageCard__content-inner"]'))
-    )
+    # WebDriverWait(driver, 8).until(
+    #     EC.presence_of_element_located(
+    #         (By.XPATH, '//div[@class="MessageCard__content-inner"]'))
+    # )
+    time.sleep(random.randint(5, 8))
     post_content_element = driver.find_element(
         By.XPATH, '//div[@class="bbWrapper"]')
     author_element = driver.find_element(
@@ -137,12 +138,16 @@ def collect_thread_urls(base_url, forum_name, thread_limit):
     return thread_urls
 
 
-def crawl_personlitycafe_forum(thread_urls, forum_name):
+def crawl_personlitycafe_forum(thread_urls, forum_name, last_stop=0):
     posts_data = list()
     with get_chrome_driver() as driver:
         for i, thread_url in enumerate(thread_urls):
+            if i < last_stop:
+                print('Did not reach last stop, continue.')
+                continue
             try:
                 time.sleep(random.randint(1, 5))  # random sleep
+                print(f"Crawling thread {i} from forum {forum_name}")
                 post_content = crawl_thread(
                     thread_url, driver)  # get thread content
                 posts_data.append(post_content)  # 處理該作者的貼文內容
@@ -177,26 +182,26 @@ def crawl_personlitycafe_forum(thread_urls, forum_name):
 
 # 設定論壇基本網址
 base_forum_urls = [
-    "https://www.personalitycafe.com/forums/istp-forum-the-mechanics.9/",
-    # "https://www.persoalitycafe.com/forums/enfj-forum-the-givers.17/",
-    "https://www.personalitycafe.com/forums/enfp-forum-the-inspirers.19/",
-    "https://www.personalitycafe.com/forums/entj-forum-the-executives.13/",
-    "https://www.personalitycafe.com/forums/entp-forum-the-visionaries.15/",
-    "https://www.personalitycafe.com/forums/esfj-forum-the-caregivers.8/",
-    "https://www.personalitycafe.com/forums/esfp-forum-the-performers.11/",
-    "https://www.personalitycafe.com/forums/estj-forum-the-guardians.6/",
-    "https://www.personalitycafe.com/forums/estp-forum-the-doers.10/",
-    "https://www.personalitycafe.com/forums/infj-forum-the-protectors.18/",
-    "https://www.personalitycafe.com/forums/infp-forum-the-idealists.20/",
-    "https://www.personalitycafe.com/forums/intj-forum-the-scientists.14/",
-    "https://www.personalitycafe.com/forums/intp-forum-the-thinkers.16/",
-    "https://www.personalitycafe.com/forums/isfj-forum-the-nurturers.7/",
-    "https://www.personalitycafe.com/forums/isfp-forum-the-artists.12/",
-    "https://www.personalitycafe.com/forums/istj-forum-the-duty-fulfillers.5/",
+    # "https://www.personalitycafe.com/forums/istp-forum-the-mechanics.9/",
+    "https://www.personalitycafe.com/forums/enfj-forum-the-givers.17/",
+    # "https://www.personalitycafe.com/forums/enfp-forum-the-inspirers.19/",
+    # "https://www.personalitycafe.com/forums/entj-forum-the-executives.13/",
+    # "https://www.personalitycafe.com/forums/entp-forum-the-visionaries.15/",
+    # "https://www.personalitycafe.com/forums/esfj-forum-the-caregivers.8/",
+    # "https://www.personalitycafe.com/forums/esfp-forum-the-performers.11/",
+    # "https://www.personalitycafe.com/forums/estj-forum-the-guardians.6/",
+    # "https://www.personalitycafe.com/forums/estp-forum-the-doers.10/",
+    # "https://www.personalitycafe.com/forums/infj-forum-the-protectors.18/",
+    # "https://www.personalitycafe.com/forums/infp-forum-the-idealists.20/",
+    # "https://www.personalitycafe.com/forums/intj-forum-the-scientists.14/",
+    # "https://www.personalitycafe.com/forums/intp-forum-the-thinkers.16/",
+    # "https://www.personalitycafe.com/forums/isfj-forum-the-nurturers.7/",
+    # "https://www.personalitycafe.com/forums/isfp-forum-the-artists.12/",
+    # "https://www.personalitycafe.com/forums/istj-forum-the-duty-fulfillers.5/",
 ]
 # base_forum_url = "https://www.personalitycafe.com/forums/istp-forum-the-mechanics.9/"
 
-# PART 1:設定要爬取的作者數目，取得所有的thread urls 並存起來
+# # PART 1:設定要爬取的作者數目，取得所有的thread urls 並存起來
 # for base_forum_url in base_forum_urls:
 #     # 設定輸出檔案的路徑
 #     forum_name = base_forum_url.split('/')[-2]
@@ -208,6 +213,7 @@ base_forum_urls = [
 #     if os.path.exists(url_collection_filename):
 #         print("Thread url collections find.")
 #         thread_urls = pd.read_csv(url_collection_filename)['thread_url']
+#         break
 #     else:
 #         try:
 #             # Get Thread Url
@@ -233,7 +239,10 @@ for base_forum_url in base_forum_urls:
         thread_urls = pd.read_csv(url_collection_filename)['thread_url']
         try:
             all_posts_data = crawl_personlitycafe_forum(
-                thread_urls, forum_name=forum_name)
+                thread_urls,
+                forum_name=forum_name,
+                # last_stop=801
+            )
         except Exception as e:
             print("Something Wrong: ", e)
             print("Skipping this forum.")

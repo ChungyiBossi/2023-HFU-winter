@@ -8,7 +8,6 @@ driver = webdriver.Chrome()
 url = "https://news.google.com/home?hl=zh-TW&gl=TW&ceid=TW:zh-Hant"
 driver.get(url=url)
 time.sleep(3)
-print(len(driver.page_source))
 
 a_elements = driver.find_elements(By.XPATH, '//a[@class="WwrzSb"]')
 print(len(a_elements))
