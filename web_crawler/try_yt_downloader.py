@@ -23,7 +23,9 @@ url = 'https://www.youtube.com/results?search_query=%E5%91%A8%E6%9D%B0%E5%80%AB'
 # Solution 2: use Selenium Chrome driver
 cService = webdriver.ChromeService(
     executable_path=r'/Users/chungilin/2023_hfu_winter/chromedriver')
-driver = webdriver.Chrome(service=cService)
+driver = webdriver.Chrome(
+    # service=cService
+)
 # driver = webdriver.Chrome()
 driver.get(url)
 time.sleep(5)
